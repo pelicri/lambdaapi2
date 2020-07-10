@@ -1,0 +1,54 @@
+.Instancias {
+    width: 400;
+    margin: 16px auto;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 3px #ccc;
+    padding: 14px;
+    text-align: center;
+    background-color: slategrey;
+    outline-color: rgb(43, 205, 226);
+    border: 1px solid black;
+    outline-style: solid;
+}
+
+.buttongreen {
+    background-color: seagreen; /* Green */
+    border: 1px solid green;
+    color: white;
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: center;
+  }
+
+.buttongreen:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+  }
+  
+.buttongreen:hover {
+    background-color: #3e8e41;
+  }
+
+  .buttonred {
+    background-color: darkred; /* Green */
+    border: 1px solid crimson;
+    color: white;
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: center;
+  }
+
+.buttonred:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+  }
+  
+.buttonred:hover {
+    background-color:crimson;
+  }

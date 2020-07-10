@@ -1,5 +1,5 @@
 {
-  "name": "Projeto - Serverless",
+  "name": "ProjetoServerless",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,9 +8,10 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "reactstrap": "^8.4.1"
   },
-   "scripts": {
+  "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

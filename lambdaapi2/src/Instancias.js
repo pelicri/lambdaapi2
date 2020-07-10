@@ -4,6 +4,9 @@ import CInstancias from './Componentes/CInstancias.jsx'
 
 const Http = new XMLHttpRequest();
 const url='https://gxgurg4n08.execute-api.us-east-1.amazonaws.com/dev/ec2';
+const urlon='https://gxgurg4n08.execute-api.us-east-1.amazonaws.com/dev/ec2/ligar';
+const urloff='https://gxgurg4n08.execute-api.us-east-1.amazonaws.com/dev/ec2/desligar';
+
 
 class Instancias extends Component {
     state = {
@@ -23,9 +26,59 @@ class Instancias extends Component {
 
             { value: 'sa-east-1', name: 'sa-east-1 - São Paulo' }
         ],
-        selecionado: "cris",
+        regiaoslc: "Região",
         instanciasAWS: null
         
+    }
+
+    changeStatus = (IDX) => {
+        const options = {
+            method: "POST",
+            headers: {"regiao" : this.state.regiaoslc, "nomeinst": this.state.instanciasAWS[IDX].InstanceId}
+        }
+        console.log(this.state.instanciasAWS[IDX].InstanceState.Name)
+        console.log(this.state.instanciasAWS[IDX].InstanceState.InstanceId)
+        if(this.state.instanciasAWS[IDX].InstanceState.Name === "stopped"){
+            this.callAPIposton(options, IDX)
+        }else{
+            this.callAPIpostoff(options, IDX)
+        }
+        
+    }
+
+    callAPIget = (options) =>{
+        console.log(options)
+        fetch(url, options)
+        .then(resp => resp.json())
+        .then(json => {
+            this.setState({instanciasAWS:json.body.InstanceStatuses})
+        })
+    }
+
+    callAPIposton = (options, IDX) =>{
+        console.log(options)
+        fetch(urlon, options)
+        .then(resp => resp.json())
+        .then(json => {
+            //this.changeStatus(this.regiaoslc)
+            console.log(json.body)
+            const changedInst = [...this.state.instanciasAWS]
+            changedInst[IDX].InstanceState.Name = "running"
+            this.setState({instanciasAWS:changedInst})
+        })
+    }
+
+    callAPIpostoff = (options, IDX) =>{
+        console.log(options)
+        fetch(urloff, options)
+        .then(resp => resp.json())
+        .then(json => {
+            //handleChange(this.regiao)
+            console.log(json.body)
+            const changedInst = [...this.state.instanciasAWS]
+            changedInst[IDX].InstanceState.Name = "stopped"
+            this.setState({instanciasAWS:changedInst})
+        })
     }
 
     optiontab = () => {
@@ -36,7 +89,7 @@ class Instancias extends Component {
 
     //evento de seleção de Região da AWS e request de instâncias
     handleChange = e => {
-        this.setState({selecionado: e.target.value})
+        this.setState({regiaoslc: e.target.value})
         console.log(this.state.regiaoslc)
 
         switch (e.target.value) {
@@ -54,16 +107,12 @@ class Instancias extends Component {
             case "sa-east-1":
 
             //configuração da variável option usada na chamada de API Fetch
-                const options ={
+                const options = {
                     method: "GET",
                     headers: {"regiao" : e.target.value}
                 }
-                
-                fetch(url, options)
-                    .then(resp => resp.json())
-                    .then(json => {
-                        this.setState({instanciasAWS:json.body.InstanceStatuses})
-                    })
+                //chama APIgateway
+                this.callAPIget(options)
                 break;
             }
     }
@@ -71,20 +120,19 @@ class Instancias extends Component {
 
     render() {
         return (
-        <form className="enviar"
-        onSubmit={this.envioAssincrono}>
-
         <div className="container">
             <div className="row">
             <div className="col-md-4"></div>
             <div className="col-md-4">
 
                 <select name="regiao" 
-                        value={this.state.selecionado} 
+                        value={this.state.regiaoslc} 
                         onChange={e => this.handleChange(e)}>
                 
                 {this.state.multiplo.map((e, key) => {
-                    return <option key={key} value={e.value}>{e.name}</option>;
+                    return <option key={key} 
+                                   value={e.value}
+                                   >{e.name}</option>;
                 })}
 
             </select>
@@ -97,13 +145,10 @@ class Instancias extends Component {
             <div>
             {this.state.instanciasAWS.map((ist, idx )=> {        
                 return <CInstancias nome={ist.InstanceId} status={ist.InstanceState.Name} 
-                                    key={idst.InstanceIdx}  /> 
+                                    key={ist.InstanceId} click={() => this.changeStatus(idx)} /> 
             })}  </div> :  null }   
         </div>
-                <input type="submit" 
-                className="btn"
-                style={{fontSize: '19px'}} />           
-        </form>
+
     )}
 
 }
