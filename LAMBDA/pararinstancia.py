@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     instance = [event['headers']['nomeinst']]
     regiao = event['headers']['regiao']
     ec2 = boto3.client('ec2', region_name=regiao)
-    ec2.start_instances(InstanceIds=instance)
+    ec2.stop_instances(InstanceIds=instance)
 
    
     #print('Instacia inicianda: ' + str(instances))
